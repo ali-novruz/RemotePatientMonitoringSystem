@@ -592,6 +592,12 @@ function updateChartsFromFitbit(heartRateData, bloodSugarData, labels, movingAve
 
 // Yeni sağlık verisi simüle etme fonksiyonu
 async function simulateHealthData() {
+    const simulateDataBtn = document.getElementById('simulateDataBtn');
+    const spinner = simulateDataBtn.querySelector('.spinner-border');
+
+    simulateDataBtn.disabled = true;
+    spinner.style.display = 'inline-block';
+
     try {
         const patientId = document.getElementById('patientSelect').value;
         const response = await fetchWithAuth(`http://localhost:8080/api/health-data/simulate/${patientId}`, {
@@ -610,6 +616,9 @@ async function simulateHealthData() {
     } catch (error) {
         console.error('Yeni veri simüle edilirken bir hata oluştu:', error);
         showNotification('Yeni veri simüle edilirken bir hata oluştu: ' + error.message);
+    } finally {
+        simulateDataBtn.disabled = false;
+        spinner.style.display = 'none';
     }
 }
 

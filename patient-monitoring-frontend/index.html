@@ -58,7 +58,10 @@
                         <label for="patientSelect" class="form-label">Hasta Seç:</label>
                         <select id="patientSelect" class="form-select" onchange="loadHealthData()"></select>
                     </div>
-                    <button class="btn btn-primary mb-3" onclick="simulateHealthData()">Yeni Veri Simüle Et</button>
+                    <button id="simulateDataBtn" class="btn btn-primary mb-3" onclick="simulateHealthData()">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                        Yeni Veri Simüle Et
+                    </button>
                     <button class="btn btn-success mb-3" onclick="connectToFitbit()">Fitbit ile Bağlan</button>
                 </div>
                 <div class="row">

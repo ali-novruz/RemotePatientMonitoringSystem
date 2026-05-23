@@ -3,101 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uzaktan Hasta Takip Sistemi</title>
+    <title>Uzaktan Hasta Takip Sistemi - Remastered</title>
+    <!-- Premium Font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Bildirim Alanı -->
-    <div id="notificationArea" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+    <!-- Background Elements -->
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
 
-    <!-- Giriş Ekranı -->
-    <div id="loginScreen" class="d-flex justify-content-center align-items-center vh-100 bg-gradient">
-        <div class="card shadow-lg p-4 animate-fade-in" style="width: 100%; max-width: 400px;">
-            <h2 class="text-center mb-4">Giriş Yap</h2>
+    <!-- Notification Area -->
+    <div id="notificationArea" class="position-fixed top-0 end-0 p-4" style="z-index: 1060; width: 350px;"></div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="d-flex justify-content-center align-items-center vh-100 position-relative">
+        <div class="glass-card login-card animate-fade-in">
+            <div class="text-center mb-4">
+                <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 3rem;"></i>
+                <h2 class="mt-2 fw-bold">Hoş Geldiniz</h2>
+                <p class="text-muted">Uzaktan Hasta Takip Sistemine Giriş Yapın</p>
+            </div>
             <form onsubmit="event.preventDefault(); login();">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Kullanıcı Adı:</label>
-                    <input type="text" class="form-control" id="username" value="user" required>
+                    <label class="form-label fw-medium"><i class="bi bi-person me-2"></i>Kullanıcı Adı</label>
+                    <input type="text" class="form-control glass-input" id="username" value="user" required>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Şifre:</label>
-                    <input type="password" class="form-control" id="password" value="password123" required>
+                <div class="mb-4">
+                    <label class="form-label fw-medium"><i class="bi bi-lock me-2"></i>Şifre</label>
+                    <input type="password" class="form-control glass-input" id="password" value="password123" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
-                <p id="loginError" class="text-danger mt-3 text-center" style="display: none;">Giriş başarısız! Kullanıcı adı veya şifre yanlış.</p>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm">
+                    Giriş Yap <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+                <p id="loginError" class="text-danger mt-3 text-center animate-fade-in" style="display: none;">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Giriş başarısız! Bilgileri kontrol edin.
+                </p>
             </form>
         </div>
     </div>
 
-    <!-- Ana İçerik -->
-    <div id="mainContent" style="display: none;" class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-center mb-0">Uzaktan Hasta Takip Sistemi</h1>
-            <button id="themeToggle" class="btn btn-outline-secondary">
-                <i class="bi bi-moon-fill"></i> Koyu Mod
-            </button>
-        </div>
-        <ul class="nav nav-tabs mb-4" id="myTab">
-            <button class="nav-item btn p-0 border-0 bg-transparent" onclick="showTab('patientTab')" onkeydown="if(event.key === 'Enter') showTab('patientTab')" aria-label="Hasta Paneli">
-                <img src="patient-icon.png" alt="Hasta Paneli">
-            </button>
-            <button class="nav-item btn p-0 border-0 bg-transparent" onclick="showTab('doctorTab')" onkeydown="if(event.key === 'Enter') showTab('doctorTab')" aria-label="Doktor Paneli">
-                <img src="doctor-icon.png" alt="Doktor Paneli">
-            </button>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="patientTab" role="tabpanel" aria-labelledby="patient-tab">
-                <div class="card shadow-sm p-4 mb-4 animate-fade-in">
-                    <div class="mb-3">
-                        <label for="patientSelect" class="form-label">Hasta Seç:</label>
-                        <select id="patientSelect" class="form-select" onchange="loadHealthData()"></select>
+    <!-- Main Content -->
+    <div id="mainContent" style="display: none;" class="container-fluid min-vh-100 p-0">
+        <div class="d-flex min-vh-100">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar glass-panel d-flex flex-column p-4 animate-slide-right">
+                <div class="sidebar-header d-flex align-items-center mb-5">
+                    <div class="logo-icon bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 48px; height: 48px;">
+                        <i class="bi bi-heart-pulse fs-4"></i>
                     </div>
-                    <button class="btn btn-primary mb-3" onclick="simulateHealthData()">Yeni Veri Simüle Et</button>
-                    <button class="btn btn-success mb-3" onclick="connectToFitbit()">Fitbit ile Bağlan</button>
+                    <h4 class="fw-bold m-0 gradient-text">UHTS</h4>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow-sm p-3 animate-on-scroll">
-                            <canvas id="heartRateChart"></canvas>
+                
+                <ul class="nav flex-column gap-2 mb-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active rounded px-3 py-2 d-flex align-items-center" onclick="showTab('patientTab'); return false;">
+                            <i class="bi bi-person-heart me-3 fs-5"></i> Hasta Paneli
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link rounded px-3 py-2 d-flex align-items-center" onclick="showTab('doctorTab'); return false;">
+                            <i class="bi bi-person-badge me-3 fs-5"></i> Doktor Paneli
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-auto">
+                    <div class="glass-card p-3 rounded text-center mb-3">
+                        <p class="small mb-2 text-muted fw-medium">Sistem Teması</p>
+                        <button id="themeToggle" class="btn btn-outline-primary btn-sm w-100 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-moon-stars me-2"></i> Koyu Mod
+                        </button>
+                    </div>
+                    <button class="btn btn-danger w-100 py-2 shadow-sm" onclick="logout()">
+                        <i class="bi bi-box-arrow-left me-2"></i> Çıkış Yap
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main Dashboard Area -->
+            <main class="flex-grow-1 p-4 overflow-auto">
+                <div class="d-flex justify-content-between align-items-end mb-4">
+                    <div>
+                        <h1 class="fw-bold mb-1">Gösterge Paneli</h1>
+                        <p class="text-muted m-0" id="currentDate">Tarih: --/--/----</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center bg-white shadow-sm px-3 py-2 rounded-pill dark-panel">
+                            <i class="bi bi-person-circle fs-4 text-primary me-2"></i>
+                            <span class="fw-medium">Dr. Aktif Oturum</span>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow-sm p-3 animate-on-scroll">
-                            <canvas id="bloodSugarChart"></canvas>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content" id="myTabContent">
+                    <!-- Patient Tab -->
+                    <div class="tab-pane fade show active" id="patientTab">
+                        
+                        <!-- Top Action Bar -->
+                        <div class="glass-card p-4 mb-4 d-flex flex-wrap gap-3 align-items-end justify-content-between animate-fade-in-up">
+                            <div class="flex-grow-1" style="max-width: 400px;">
+                                <label class="form-label fw-semibold text-muted mb-2"><i class="bi bi-search me-2"></i>Kayıtlı Hasta Seçimi</label>
+                                <select id="patientSelect" class="form-select glass-input form-select-lg" onchange="loadHealthData()"></select>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary d-flex align-items-center shadow-sm" onclick="simulateHealthData()">
+                                    <i class="bi bi-activity me-2"></i> Yeni Veri Simüle Et
+                                </button>
+                                <div class="dropdown">
+                                    <button class="btn btn-success d-flex align-items-center shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-smartwatch me-2"></i> Fitbit
+                                    </button>
+                                    <ul class="dropdown-menu shadow">
+                                        <li><a class="dropdown-item" href="#" onclick="connectToFitbit(); return false;"><i class="bi bi-link-45deg me-2 text-success"></i>Gerçek Cihaza Bağlan</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#" onclick="simulateFitbitStream(); return false;"><i class="bi bi-play-circle me-2 text-primary"></i>Simülasyon Modu Başlat</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vitals Summary Cards -->
+                        <div class="row g-4 mb-4" id="vitalsSummary">
+                            <!-- Heart Rate Card -->
+                            <div class="col-md-4">
+                                <div class="glass-card p-4 d-flex align-items-center h-100 hover-lift animate-fade-in-up" style="animation-delay: 0.1s;">
+                                    <div class="icon-box bg-danger-subtle text-danger me-3 pulse-danger">
+                                        <i class="bi bi-heart-fill fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-muted mb-0 fw-medium">Ort. Nabız</p>
+                                        <h3 class="fw-bold mb-0" id="summaryHeartRate">-- <span class="fs-6 text-muted fw-normal">bpm</span></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Blood Sugar Card -->
+                            <div class="col-md-4">
+                                <div class="glass-card p-4 d-flex align-items-center h-100 hover-lift animate-fade-in-up" style="animation-delay: 0.2s;">
+                                    <div class="icon-box bg-info-subtle text-info me-3">
+                                        <i class="bi bi-droplet-fill fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-muted mb-0 fw-medium">Ort. Kan Şekeri</p>
+                                        <h3 class="fw-bold mb-0" id="summaryBloodSugar">-- <span class="fs-6 text-muted fw-normal">mg/dL</span></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Blood Pressure Card -->
+                            <div class="col-md-4">
+                                <div class="glass-card p-4 d-flex align-items-center h-100 hover-lift animate-fade-in-up" style="animation-delay: 0.3s;">
+                                    <div class="icon-box bg-primary-subtle text-primary me-3">
+                                        <i class="bi bi-activity fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-muted mb-0 fw-medium">Son Tansiyon</p>
+                                        <h3 class="fw-bold mb-0" id="summaryBloodPressure">--/--</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Area -->
+                        <div class="row g-4">
+                            <div class="col-lg-8">
+                                <div class="glass-card p-4 h-100 animate-fade-in-up" style="animation-delay: 0.4s;">
+                                    <h5 class="fw-bold mb-4 d-flex align-items-center">
+                                        <i class="bi bi-graph-up-arrow text-danger me-2"></i> Nabız Trendi
+                                    </h5>
+                                    <div style="height: 350px; position: relative;">
+                                        <canvas id="heartRateChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="glass-card p-4 h-100 animate-fade-in-up" style="animation-delay: 0.5s;">
+                                    <h5 class="fw-bold mb-4 d-flex align-items-center">
+                                        <i class="bi bi-bar-chart-fill text-info me-2"></i> Kan Şekeri
+                                    </h5>
+                                    <div style="height: 350px; position: relative;">
+                                        <canvas id="bloodSugarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Tab -->
+                    <div class="tab-pane fade" id="doctorTab">
+                        <div class="glass-card p-4 animate-fade-in-up">
+                            <h5 class="fw-bold mb-4 d-flex align-items-center">
+                                <i class="bi bi-hospital text-primary me-2"></i> Kayıtlı Doktor Listesi
+                            </h5>
+                            <div class="table-responsive">
+                                <table id="doctorTable" class="table custom-table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Doktor Adı</th>
+                                            <th>E-posta</th>
+                                            <th>Takip Edilen Hastalar</th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="doctorTab" role="tabpanel" aria-labelledby="doctor-tab">
-                <div class="card shadow-sm p-4 animate-fade-in">
-                    <table id="doctorTable" class="table table-striped table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Doktor Adı</th>
-                                <th>E-posta</th>
-                                <th>Hastalar</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Chart.js -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <!-- Chart.js Date Adapter -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

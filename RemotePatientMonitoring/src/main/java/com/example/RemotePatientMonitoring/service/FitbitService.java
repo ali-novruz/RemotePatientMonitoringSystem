@@ -1,5 +1,8 @@
 package com.example.RemotePatientMonitoring.service;
 
+import com.example.RemotePatientMonitoring.model.Patient;
+import com.example.RemotePatientMonitoring.repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +21,9 @@ import java.util.Map;
 
 @Service
 public class FitbitService {
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Value("${fitbit.client.id}")
     private String clientId;
@@ -26,20 +34,19 @@ public class FitbitService {
     @Value("${fitbit.redirect.uri}")
     private String redirectUri;
 
-    private String accessToken;
-
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String getAuthorizationUrl() {
+    public String getAuthorizationUrl(Long patientId) {
         if (clientId == null || redirectUri == null) {
             throw new IllegalStateException("Fitbit yapılandırma bilgileri eksik: clientId veya redirectUri bulunamadı.");
         }
+        String state = patientId != null ? patientId.toString() : "unknown";
         String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
         return "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=" + clientId +
-                "&redirect_uri=" + encodedRedirectUri + "&scope=activity%20heartrate%20sleep";
+                "&redirect_uri=" + encodedRedirectUri + "&scope=activity%20heartrate%20sleep&state=" + state;
     }
 
-    public void exchangeCodeForToken(String code) {
+    public void exchangeCodeForToken(String code, Long patientId) {
         String tokenUrl = "https://api.fitbit.com/oauth2/token";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -53,17 +60,26 @@ public class FitbitService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, request, String.class);
-        this.accessToken = response.getBody().split("\"access_token\":\"")[1].split("\"")[0];
+        String token = response.getBody().split("\"access_token\":\"")[1].split("\"")[0];
+        
+        if (patientId != null) {
+            Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
+            patient.setFitbitAccessToken(token);
+            patientRepository.save(patient);
+        }
     }
 
-    public Map<String, Object> getHeartRateData() {
-        if (accessToken == null) {
+    public Map<String, Object> getHeartRateData(Long patientId) {
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
+        String token = patient.getFitbitAccessToken();
+
+        if (token == null) {
             throw new IllegalStateException("Access token bulunamadı. Lütfen önce yetkilendirme yapın.");
         }
 
         String heartRateUrl = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d/1min.json";
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(token);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<Map> response = restTemplate.exchange(heartRateUrl, HttpMethod.GET, entity, Map.class);
@@ -73,6 +89,39 @@ public class FitbitService {
         Map<String, Object> analysisResult = analyzeHeartRateData(heartRateData);
         heartRateData.put("analysis", analysisResult);
 
+        return heartRateData;
+    }
+
+    public Map<String, Object> getSimulatedHeartRateData() {
+        Map<String, Object> heartRateData = new HashMap<>();
+        Map<String, Object> intraday = new HashMap<>();
+        List<Map<String, Object>> dataset = new ArrayList<>();
+        
+        LocalTime now = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        
+        int baseHeartRate = 75;
+        // Generate last 60 minutes of data
+        for (int i = 60; i >= 0; i--) {
+            Map<String, Object> entry = new HashMap<>();
+            LocalTime time = now.minusMinutes(i);
+            entry.put("time", time.format(formatter));
+            
+            // Introduce some random variance and a sudden spike for demonstration
+            int value = baseHeartRate + (int)(Math.random() * 10 - 5);
+            if (i == 10) value += 30; // Sudden change
+            if (i < 5) value = 105; // Elevated
+            
+            entry.put("value", value);
+            dataset.add(entry);
+        }
+        
+        intraday.put("dataset", dataset);
+        heartRateData.put("activities-heart-intraday", intraday);
+        
+        Map<String, Object> analysisResult = analyzeHeartRateData(heartRateData);
+        heartRateData.put("analysis", analysisResult);
+        
         return heartRateData;
     }
 

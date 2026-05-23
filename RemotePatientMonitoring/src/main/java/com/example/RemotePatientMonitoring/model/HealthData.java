@@ -1,7 +1,6 @@
 package com.example.RemotePatientMonitoring.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 

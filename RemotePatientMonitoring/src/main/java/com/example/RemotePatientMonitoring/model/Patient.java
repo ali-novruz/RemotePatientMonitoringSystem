@@ -22,6 +22,12 @@ public class Patient {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "fitbit_access_token", length = 1000)
+    private String fitbitAccessToken;
+
+    @Column(name = "fitbit_refresh_token", length = 1000)
+    private String fitbitRefreshToken;
+
     // Boş constructor (JPA için gerekli)
     public Patient() {}
 
@@ -64,5 +70,21 @@ public class Patient {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFitbitAccessToken() {
+        return fitbitAccessToken;
+    }
+
+    public void setFitbitAccessToken(String fitbitAccessToken) {
+        this.fitbitAccessToken = fitbitAccessToken;
+    }
+
+    public String getFitbitRefreshToken() {
+        return fitbitRefreshToken;
+    }
+
+    public void setFitbitRefreshToken(String fitbitRefreshToken) {
+        this.fitbitRefreshToken = fitbitRefreshToken;
     }
 }

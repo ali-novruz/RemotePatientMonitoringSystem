@@ -7,7 +7,7 @@ export const Api = {
     setCredentials(credentials) {
         authCredentials = credentials;
     },
-    
+
     getCredentials() {
         return authCredentials;
     },
@@ -21,13 +21,12 @@ export const Api = {
         const response = await fetch(`${API_BASE}${endpoint}`, {
             ...options,
             headers: {
-                ...options.headers,
                 'Authorization': `Basic ${authCredentials}`,
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
             }
         });
-        
+
         if (!response.ok) {
             let errorMessage = 'API Error';
             try {
@@ -38,10 +37,9 @@ export const Api = {
             }
             throw new Error(errorMessage);
         }
-        
-        // Some endpoints like fitbit/authorize return text instead of JSON
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
+
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
             const result = await response.json();
             if (result && result.success !== undefined) {
                 return result.data;
@@ -51,17 +49,17 @@ export const Api = {
             return response.text();
         }
     },
-    
+
     async login(username, password) {
         const credentials = btoa(`${username}:${password}`);
+        // Simple GET request with Basic Auth – no extra headers that trigger pre-flight
         const response = await fetch(`${API_BASE}/doctors`, {
             method: 'GET',
             headers: {
-                'Authorization': `Basic ${credentials}`,
-                'X-Requested-With': 'XMLHttpRequest'
+                'Authorization': `Basic ${credentials}`
             }
         });
-        
+
         if (!response.ok) throw new Error('Login failed');
         this.setCredentials(credentials);
         return credentials;

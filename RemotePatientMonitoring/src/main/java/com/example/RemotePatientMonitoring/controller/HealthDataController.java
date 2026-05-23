@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/health-data")
-@CrossOrigin(origins = "*")
+@CrossOrigin(originPatterns = "*")
 public class HealthDataController {
 
     @Autowired

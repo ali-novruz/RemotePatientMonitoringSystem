@@ -1,156 +1,108 @@
-# Remote Patient Monitoring System 🩺 (Remastered Edition)
+# Remote Patient Monitoring System (RPMS) - Remastered
 
-*A modern, premium solution for remote patient monitoring with Glassmorphic UI and Smart Data Seeding.*
+![RPMS Banner](https://via.placeholder.com/1200x400.png?text=Remote+Patient+Monitoring+System)
 
----
+> A modern, robust, and full-stack Remote Patient Monitoring System rebuilt with clean architecture, elegant UI, and scalable design patterns.
 
-## 📖 Overview
+## 🌟 Overview
 
-The **Remote Patient Monitoring System** is a state-of-the-art web application designed to monitor patients' health data (heart rate, blood sugar, blood pressure) remotely and in real-time. This system enables doctors to track their patients' health metrics, integrates with Fitbit devices to provide comprehensive health analysis, and generates automatic notifications for abnormal health data.
+The **Remote Patient Monitoring System** is designed to track patient health data (Heart Rate, Blood Sugar, Blood Pressure) in real-time. It connects doctors with their patients, providing dynamic analytics, notifications for abnormal health conditions, and real-time dashboard visualizations.
 
-**What's new in the Remastered Edition?** 🚀
-- **Premium Glassmorphic UI:** A complete frontend overhaul featuring custom CSS glassmorphism, responsive sidebar layout, smooth micro-animations, and dynamic Chart.js gradients.
-- **Smart Data Seeder:** Automatically populates the database with sample doctors, patients, and realistic health records on first startup. No manual data entry required!
-- **Fitbit Live Stream Simulator:** Don't have a Fitbit developer account? No problem! Use the built-in simulator mode to stream 60 minutes of mock physiological data (with moving averages and anomaly alerts) directly to your dashboard.
-- **Multi-user Fitbit Token Architecture:** Fitbit Access Tokens are now securely associated with individual patients in the database, allowing multiple patients to connect their unique devices flawlessly.
-- **Global API Error Handling:** Improved backend architecture with a `@RestControllerAdvice` for clean JSON error responses.
+This project uses a **Spring Boot 3** backend with a layered, modular architecture, and a **Vanilla JavaScript** frontend enriched with Bootstrap 5 and Chart.js for a premium user experience.
 
-This project is built using **Java Spring Boot 3** (backend), **JavaScript/HTML/CSS** (frontend), and **PostgreSQL** (database).
+## ✨ Features
 
----
-
-## ✨ Key Features
-
-- **Real-Time Health Data Monitoring:** Visualize heart rate, blood sugar, and blood pressure data with beautifully animated interactive charts.
-- **Fitbit Integration & Simulation:** Retrieve and analyze heart rate data from real Fitbit devices or run the built-in Live Stream Simulator.
-- **Abnormal Data Detection:** Automatically generate alerts and warning cards when heart rate exceeds 100 bpm or blood sugar exceeds 120 mg/dL.
-- **Multi-User Architecture:** Support for multiple doctors managing multiple patients securely.
-- **Dark/Light Theme Support:** Toggle between highly optimized Light and Dark modes with curated HSL color palettes.
-
----
+- **👨‍⚕️ Doctor Dashboard:** View registered doctors and the patients they are monitoring.
+- **❤️ Patient Health Tracking:** Track vital signs (Heart rate, Blood sugar, Blood pressure).
+- **📊 Interactive Charts:** Visualize health trends dynamically with `Chart.js`.
+- **🔔 Abnormal Vitals Alerting:** Automatic simulated alerts for out-of-range metrics.
+- **🌓 Dark/Light Mode:** Full system theme support, preserved across sessions.
+- **🔒 API Wrapper Pattern:** A unified generic `ApiResponse<T>` envelope for all API endpoints.
+- **🛡️ Global Exception Handling:** Robust validation and error processing on the backend.
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Java 17, Spring Boot 3, Spring Data JPA, Spring Security
-- **Frontend:** HTML5, CSS3 (Vanilla + Glassmorphism), Vanilla JavaScript
-- **Database:** PostgreSQL
-- **Charting Library:** Chart.js 3
-- **Icons & Typography:** Bootstrap Icons, Google Outfit Font
-- **Integrations:** Fitbit OAuth2 API
+### Backend
+- **Java 17+**
+- **Spring Boot 3.4.3**
+- **Spring Web / Spring Data JPA**
+- **H2 In-Memory Database** (for quick bootstrapping)
+- **Lombok** (Boilerplate reduction)
+- **Jakarta Validation API**
+
+### Frontend
+- **HTML5 / CSS3 / JavaScript (ES6 Modules)**
+- **Bootstrap 5.3**
+- **Bootstrap Icons**
+- **Chart.js**
 
 ---
 
-## 📦 Installation
-
-Follow the steps below to set up and run the remastered project on your local machine.
+## 🚀 Getting Started
 
 ### Prerequisites
-- **Java 17+** (required for Spring Boot)
-- **Node.js** (optional, for running the frontend with Live Server)
-- **PostgreSQL** (for the database)
+- JDK 17 or higher (`JAVA_HOME` configured)
+- Node.js & npm (optional, for advanced frontend tooling if needed)
+- A modern web browser
 
-### Steps
+### Backend Setup
 
-1. **Clone the Repository:**
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/ali-novruz/RemotePatientMonitoringSystem.git
-   cd RemotePatientMonitoringSystem
+   git clone https://github.com/your-username/remote-patient-monitoring.git
+   cd remote-patient-monitoring/RemotePatientMonitoring
    ```
 
-2. **Set Up the Database:**
-   Create a PostgreSQL database:
-   ```sql
-   CREATE DATABASE remote_patient_monitoring;
-   ```
-   Update the `application.properties` file (`RemotePatientMonitoring/src/main/resources/application.properties`) with your database connection details:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/remote_patient_monitoring
-   spring.datasource.username=your-username
-   spring.datasource.password=your-password
-   ```
-
-3. **Run the Backend:**
-   - Open the backend directory (`RemotePatientMonitoring`) in your IDE (IntelliJ IDEA, Eclipse, etc.).
-   - Run the application.
-   - The **DataSeeder** will automatically detect an empty database and insert sample Doctors, Patients, and simulated health history.
-   - The backend will start on `http://localhost:8080`.
-
-4. **Run the Frontend:**
-   - Open the frontend directory (`patient-monitoring-frontend/index.html`) in VS Code.
-   - Use the Live Server extension to run the file (`Go Live`).
-   - The frontend will start on `http://127.0.0.1:5500` by default.
-
-5. **(Optional) Configure Real Fitbit API Integration:**
-   - Create an application on the Fitbit Developer Portal and obtain your `client_id` and `client_secret`.
-   - Add the Fitbit API credentials to the `application.properties` file:
-   ```properties
-   fitbit.client-id=your-client-id
-   fitbit.client-secret=your-client-secret
-   fitbit.redirect-uri=http://localhost:8080/api/fitbit/callback
-   ```
-   *Note: If you skip this, you can still use the new "Simülasyon Modu" (Simulator Mode) from the frontend!*
-
----
-
-## 🚀 Usage
-
-### Log In:
-- Open the application and log in using the default credentials:  
-  **Username:** `user`  
-  **Password:** `password123`
-
-### Use the Patient Panel:
-- Navigate to the **Hasta Paneli** (Patient Tab).
-- Select a patient from the dropdown (automatically populated by the Data Seeder).
-- View health data in interactive gradients.
-- Click **"Yeni Veri Simüle Et"** to generate an instant mock health record.
-
-### Fitbit Demonstration:
-- Open the **Fitbit** dropdown on the top right.
-- Click **"Simülasyon Modu Başlat"** to visualize real-time moving averages and sudden heart rate anomaly detection without a device!
-
-### Use the Doctor Panel:
-- Navigate to the **Doktor Paneli** (Doctor Tab) to view the beautifully formatted list of doctors and their associated patients.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! To contribute to this project, please follow these steps:
-
-1. Fork this repository.
-2. Create a new branch:  
+2. **Run the backend using Maven wrapper:**
    ```bash
-   git checkout -b feature/your-feature
+   ./mvnw spring-boot:run
    ```
-3. Make your changes and commit them:  
+   > The application will run on `http://localhost:8080`.
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
    ```bash
-   git commit -m "Added your feature"
+   cd ../patient-monitoring-frontend
    ```
-4. Push your branch:  
+
+2. Open the `index.html` file in your browser, or start a simple local server:
    ```bash
-   git push origin feature/your-feature
+   npx serve .
    ```
-5. Open a Pull Request.
+   > By default, the frontend connects to `http://localhost:8080`. Ensure the backend is running.
 
 ---
 
-## 📜 License
+## 📚 API Endpoints
 
-This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
+All responses are wrapped in the standard `ApiResponse` envelope:
+```json
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": { ... }
+}
+```
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/doctors` | Get all registered doctors. |
+| `GET` | `/api/doctors/{id}/patients` | Get patients monitored by a specific doctor. |
+| `GET` | `/api/patients` | Get all patients. |
+| `GET` | `/api/patients/{id}` | Get a specific patient by ID. |
+| `GET` | `/api/health-data/{patientId}` | Get historical health data for a patient. |
+| `POST` | `/api/health-data` | Add new health metrics manually. |
+| `POST` | `/api/health-data/simulate/{patientId}` | Auto-generate test health metrics. |
 
 ---
 
-## 📧 Contact
+## 🎨 UI/UX Design
 
-- **Email:** alinovruz29@gmail.com  
-- **GitHub:** [Ali Novruz](https://github.com/ali-novruz)
+The application implements a premium "Glassmorphism" aesthetic with vibrant gradients and subtle CSS micro-animations. It's responsive out of the box and features an accessible, high-contrast Dark Mode toggle.
 
 ---
 
-## 🙏 Acknowledgments
+## 📝 License
 
-- **Fitbit API** for providing health data integration.
-- **Chart.js** for the interactive charting library.
-
-⭐ If you like this project, please give it a star!
+This project is open-source and available under the [MIT License](LICENSE).

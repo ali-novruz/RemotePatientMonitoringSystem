@@ -30,17 +30,17 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (patientRepository.count() == 0) {
             // Seed Patients
-            Patient p1 = createPatient("Ahmet", "Yılmaz", "ahmet@example.com");
-            Patient p2 = createPatient("Elif", "Demir", "elif@example.com");
-            Patient p3 = createPatient("Can", "Koç", "can@example.com");
-            Patient p4 = createPatient("Zeynep", "Kaya", "zeynep@example.com");
-            Patient p5 = createPatient("Murat", "Şahin", "murat@example.com");
+            Patient p1 = createPatient("John", "Doe", "john.doe@example.com");
+            Patient p2 = createPatient("Jane", "Smith", "jane.smith@example.com");
+            Patient p3 = createPatient("Robert", "Johnson", "robert.j@example.com");
+            Patient p4 = createPatient("Emily", "Davis", "emily.d@example.com");
+            Patient p5 = createPatient("Michael", "Wilson", "michael.w@example.com");
 
             patientRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
             // Seed Doctors
-            Doctor d1 = createDoctor("Dr. Aylin", "Yılmaz", "aylin@hospital.com", Arrays.asList(p1, p2, p3));
-            Doctor d2 = createDoctor("Dr. Burak", "Kaya", "burak@hospital.com", Arrays.asList(p4, p5));
+            Doctor d1 = createDoctor("Dr. Sarah", "Connor", "sarah.c@hospital.com", Arrays.asList(p1, p2, p3));
+            Doctor d2 = createDoctor("Dr. Alan", "Grant", "alan.g@hospital.com", Arrays.asList(p4, p5));
 
             doctorRepository.saveAll(Arrays.asList(d1, d2));
 
@@ -51,7 +51,7 @@ public class DataSeeder implements CommandLineRunner {
             seedHealthData(p4);
             seedHealthData(p5);
 
-            System.out.println("Veritabanı başlangıç verileri (Data Seeder) başarıyla eklendi.");
+            System.out.println("Database initial data (Data Seeder) added successfully.");
         }
     }
 

@@ -20,18 +20,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF korumasını devre dışı bırak
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 Console icin
                 .authorizeHttpRequests(auth -> auth
-                        // OPTIONS isteklerini kimlik doğrulama olmadan serbest bırak
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // Fitbit yetkilendirme uç noktalarını kimlik doğrulama dışı bırak
                         .requestMatchers("/api/fitbit/authorize", "/api/fitbit/callback").permitAll()
-                        // /api/ ile başlayan diğer tüm uç noktalar kimlik doğrulama gerektirir
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
-                        // Diğer tüm istekler serbest
                         .anyRequest().permitAll()
                 )
-                .httpBasic(httpBasic -> {}); // Basit HTTP Basic Authentication kullan
+                .httpBasic(httpBasic -> {});
 
         return http.build();
     }
